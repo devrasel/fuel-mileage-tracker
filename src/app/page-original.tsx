@@ -421,11 +421,12 @@ export default function Home() {
         />
 
         {/* Settings Modal */}
-        <SettingsModal
+        {/*  <SettingsModal
           isOpen={isSettingsModalOpen}
           onClose={() => setIsSettingsModalOpen(false)}
           onSettingsSaved={fetchSettings}
         />
+        */}
 
         {/* Vehicle Management Modal */}
         <VehicleManagementModal
