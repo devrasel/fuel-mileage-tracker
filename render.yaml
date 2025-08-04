@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: fuel-mileage-tracker
+    env: node
+    plan: free
+    buildCommand: "npm install; npm run build"
+    startCommand: "npm run start"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: fuel-mileage-tracker-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+
+databases:
+  - name: fuel-mileage-tracker-db
+    plan: free
+    databaseName: fuel_mileage_tracker
+    user: fuel_mileage_tracker_user
