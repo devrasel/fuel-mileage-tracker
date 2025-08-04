@@ -1,9 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 
+type RouteParams = {
+  params: {
+    id: string;
+  };
+};
+
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: RouteParams
 ): Promise<NextResponse> {
   try {
     const vehicle = await db.vehicle.findUnique({
@@ -26,7 +32,7 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: RouteParams
 ): Promise<NextResponse> {
   try {
     const body = await request.json();
@@ -64,7 +70,7 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: RouteParams
 ): Promise<NextResponse> {
   try {
     // Check if vehicle has fuel entries
