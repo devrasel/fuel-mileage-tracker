@@ -4,17 +4,19 @@ import { db } from '@/lib/db';
 // GET: Fetch vehicle by ID
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await context.params;
+    
     const vehicle = await db.vehicle.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
-
+    
     if (!vehicle) {
       return NextResponse.json({ error: 'Vehicle not found' }, { status: 404 });
     }
-
+    
     return NextResponse.json(vehicle);
   } catch (error) {
     console.error('Error fetching vehicle:', error);
@@ -28,21 +30,22 @@ export async function GET(
 // PUT: Update vehicle by ID
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await context.params;
     const body = await request.json();
     const { name, make, model, year, licensePlate, color, isActive } = body;
-
+    
     if (!name || name.trim() === '') {
       return NextResponse.json(
         { error: 'Vehicle name is required' },
         { status: 400 }
       );
     }
-
+    
     const vehicle = await db.vehicle.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         name: name.trim(),
         make: make?.trim() || null,
@@ -53,7 +56,7 @@ export async function PUT(
         isActive: isActive !== undefined ? isActive : true,
       }
     });
-
+    
     return NextResponse.json(vehicle);
   } catch (error) {
     console.error('Error updating vehicle:', error);
@@ -67,24 +70,26 @@ export async function PUT(
 // DELETE: Remove vehicle by ID
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await context.params;
+    
     const fuelEntriesCount = await db.fuelEntry.count({
-      where: { vehicleId: params.id }
+      where: { vehicleId: id }
     });
-
+    
     if (fuelEntriesCount > 0) {
       return NextResponse.json(
         { error: 'Cannot delete vehicle with existing fuel entries. Deactivate it instead.' },
         { status: 400 }
       );
     }
-
+    
     await db.vehicle.delete({
-      where: { id: params.id }
+      where: { id }
     });
-
+    
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Error deleting vehicle:', error);
