@@ -18,7 +18,7 @@ import MaintenanceCostModal from '@/components/maintenance-cost-modal';
 import GeneralLoading from '@/components/general-loading';
 import CombinedAnalytics from '@/components/combined-analytics';
 import SettingsTab from '@/components/settings-tab';
-import Reminders from '@/components/reminders';
+//import Reminders from '@/components/reminders';
 import EfficiencyAnalysis from '@/components/efficiency-analysis';
 import VehicleInfo from '@/components/vehicle-info';
 import { Fuel, BarChart3, Settings, Wrench, Calendar, LogOut, TrendingUp, Bell, Car, PieChart, Activity } from 'lucide-react';
