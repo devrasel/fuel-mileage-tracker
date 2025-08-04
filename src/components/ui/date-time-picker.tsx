@@ -75,41 +75,43 @@ export function DateTimePicker({ value, onChange, disabled, className, timezone,
 
   return (
     <div className="flex gap-1 sm:gap-2">
-      <Popover className={autoTime ? "w-full" : "flex-1"}>
-        <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            className={cn(
-              "w-full h-10 sm:h-10 justify-start text-left font-normal border focus:border-primary/30 px-3 sm:px-3",
-              !date && "text-muted-foreground",
-              className
-            )}
-            disabled={disabled}
-          >
-            <CalendarIcon className="mr-2 h-4 w-4 flex-shrink-0" />
-            <div className="flex flex-col items-start truncate min-w-0">
-              <span className="text-xs sm:text-sm font-medium">
-                {date ? format(date, 'dd MMM yyyy') : <span>Select Date</span>}
-              </span>
-              {date && (
-                <span className="text-[10px] sm:text-xs text-muted-foreground">
-                  {format(date, 'EEEE, MMMM dd, yyyy')}
-                </span>
+      <div className={autoTime ? "w-full" : "flex-1"}>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              className={cn(
+                "w-full h-10 sm:h-10 justify-start text-left font-normal border focus:border-primary/30 px-3 sm:px-3",
+                !date && "text-muted-foreground",
+                className
               )}
-            </div>
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-auto p-0" align="start" sideOffset={4}>
-          <Calendar
-            mode="single"
-            selected={date}
-            onSelect={handleDateSelect}
-            disabled={disabled}
-            initialFocus
-            className="rounded-md border"
-          />
-        </PopoverContent>
-      </Popover>
+              disabled={disabled}
+            >
+              <CalendarIcon className="mr-2 h-4 w-4 flex-shrink-0" />
+              <div className="flex flex-col items-start truncate min-w-0">
+                <span className="text-xs sm:text-sm font-medium">
+                  {date ? format(date, 'dd MMM yyyy') : <span>Select Date</span>}
+                </span>
+                {date && (
+                  <span className="text-[10px] sm:text-xs text-muted-foreground">
+                    {format(date, 'EEEE, MMMM dd, yyyy')}
+                  </span>
+                )}
+              </div>
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0" align="start" sideOffset={4}>
+            <Calendar
+              mode="single"
+              selected={date}
+              onSelect={handleDateSelect}
+              disabled={disabled}
+              initialFocus
+              className="rounded-md border"
+            />
+          </PopoverContent>
+        </Popover>
+      </div>
       
       {!autoTime && (
         <div className="flex items-center gap-1 flex-1">
