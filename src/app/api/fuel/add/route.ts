@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Handle odometer extra km for partial entries
-    let updatedParentEntry = null;
+    let updatedParentEntry: any = null;  // Changed: Added type annotation
     if (fuelType === 'PARTIAL' && odometerExtraKm && parseFloat(odometerExtraKm) > 0 && parentEntry) {
       // Find the parent entry
       const parentFuelEntry = await db.fuelEntry.findFirst({
