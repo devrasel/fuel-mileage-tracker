@@ -89,7 +89,7 @@ export async function GET(request: NextRequest) {
       stats.totalDistance = totalDistance;
       
       // Calculate consumption rates only between FULL entries (mileage = distance ÷ previous fuel amount)
-      const consumptions = [];
+      const consumptions: number[] = []; // Fixed: Added explicit type annotation
       for (let i = 1; i < fullEntries.length; i++) {
         const currentEntry = fullEntries[i];
         const previousEntry = fullEntries[i - 1];
@@ -173,7 +173,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Handle odometer extra km for partial entries
-    let updatedParentEntry = null;
+    let updatedParentEntry: any = null; // Fixed: Added explicit type annotation
     if (fuelType === 'PARTIAL' && odometerExtraKm && parseFloat(odometerExtraKm) > 0 && parentEntry) {
       // Find the parent entry
       const parentFuelEntry = await db.fuelEntry.findFirst({
