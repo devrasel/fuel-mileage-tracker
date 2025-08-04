@@ -26,7 +26,8 @@ export default function FuelEntryForm({ onEntryAdded, editingEntry, onCancelEdit
     fuelType: 'FULL' as 'FULL' | 'PARTIAL',
     parentEntry: '',
     location: '',
-    notes: ''
+    notes: '',
+    distanceUnit: 'km' // Added this line
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [autoCalculate, setAutoCalculate] = useState(true);
@@ -43,7 +44,8 @@ export default function FuelEntryForm({ onEntryAdded, editingEntry, onCancelEdit
         fuelType: editingEntry.fuelType,
         parentEntry: editingEntry.parentEntry || '',
         location: editingEntry.location || '',
-        notes: editingEntry.notes || ''
+        notes: editingEntry.notes || '',
+        distanceUnit: editingEntry.distanceUnit || 'km' // Added this line
       });
     }
   }, [editingEntry]);
@@ -126,7 +128,8 @@ export default function FuelEntryForm({ onEntryAdded, editingEntry, onCancelEdit
           fuelType: 'FULL',
           parentEntry: '',
           location: '',
-          notes: ''
+          notes: '',
+          distanceUnit: 'km' // Added this line
         });
         onEntryAdded();
         if (onCancelEdit) onCancelEdit();
