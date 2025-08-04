@@ -1,60 +1,36 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { verifyToken } from '@/lib/auth';
 
-// Helper function to get user from request
-async function getUserFromRequest(request: NextRequest) {
-  const token = request.cookies.get('auth-token')?.value;
-  if (!token) return null;
-  
-  const payload = verifyToken(token);
-  if (!payload) return null;
-  
-  return payload;
-}
-
-export async function GET(request: NextRequest) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+): Promise<NextResponse> {
   try {
-    const user = await getUserFromRequest(request);
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const { searchParams } = new URL(request.url);
-    const includeInactive = searchParams.get('includeInactive') === 'true';
-    
-    const vehicles = await db.vehicle.findMany({
-      where: {
-        userId: user.id,
-        ...(includeInactive ? {} : { isActive: true })
-      },
-      orderBy: [
-        { displayOrder: 'asc' },
-        { createdAt: 'desc' }
-      ]
+    const vehicle = await db.vehicle.findUnique({
+      where: { id: params.id },
     });
 
-    return NextResponse.json(vehicles);
+    if (!vehicle) {
+      return NextResponse.json({ error: 'Vehicle not found' }, { status: 404 });
+    }
+
+    return NextResponse.json(vehicle);
   } catch (error) {
-    console.error('Error fetching vehicles:', error);
+    console.error('Error fetching vehicle:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch vehicles' },
+      { error: 'Failed to fetch vehicle' },
       { status: 500 }
     );
   }
 }
 
-export async function POST(request: NextRequest) {
-  let requestBody: any = {};
-  
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+): Promise<NextResponse> {
   try {
-    const user = await getUserFromRequest(request);
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    requestBody = await request.json();
-    const { name, make, model, year, licensePlate, color, isActive } = requestBody;
+    const body = await request.json();
+    const { name, make, model, year, licensePlate, color, isActive } = body;
 
     if (!name || name.trim() === '') {
       return NextResponse.json(
@@ -63,59 +39,55 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get the highest displayOrder value
-    const highestOrder = await db.vehicle.findFirst({
-      where: { userId: user.id },
-      orderBy: { displayOrder: 'desc' },
-      select: { displayOrder: true }
-    }) as { displayOrder: number } | null;
-    
-    const nextOrder = highestOrder ? highestOrder.displayOrder + 1 : 0;
-    
-    // Log the data being sent to the database
-    console.log('Creating vehicle with data:', {
-      name: name?.trim(),
-      make: make?.trim() || null,
-      model: model?.trim() || null,
-      year: year ? (typeof year === 'string' ? parseInt(year) : year) : null,
-      licensePlate: licensePlate?.trim() || null,
-      color: color?.trim() || null,
-      isActive: isActive !== undefined ? Boolean(isActive) : true,
-      displayOrder: nextOrder,
-      userId: user.id
-    });
-
-    // Ensure all fields are properly formatted
-    const vehicle = await db.vehicle.create({
+    const vehicle = await db.vehicle.update({
+      where: { id: params.id },
       data: {
         name: name.trim(),
         make: make?.trim() || null,
         model: model?.trim() || null,
-        year: year ? (typeof year === 'string' ? parseInt(year) : year) : null,
+        year: year || null,
         licensePlate: licensePlate?.trim() || null,
         color: color?.trim() || null,
-        isActive: isActive !== undefined ? Boolean(isActive) : true,
-        displayOrder: nextOrder,
-        userId: user.id
+        isActive: isActive !== undefined ? isActive : true,
       }
     });
 
-    return NextResponse.json(vehicle, { status: 201 });
-  } catch (error: any) {
-    console.error('Error creating vehicle:', error);
-    console.error('Error details:', JSON.stringify({
-      message: error.message || 'No message',
-      name: error.name || 'No name',
-      stack: error.stack || 'No stack',
-      meta: error.meta || 'No meta',
-      code: error.code || 'No code'
-    }, null, 2));
-    
-    // Log the request body for debugging
-    console.error('Request body:', JSON.stringify(requestBody, null, 2));
-    
+    return NextResponse.json(vehicle);
+  } catch (error) {
+    console.error('Error updating vehicle:', error);
     return NextResponse.json(
-      { error: 'Failed to create vehicle' },
+      { error: 'Failed to update vehicle' },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+): Promise<NextResponse> {
+  try {
+    // Check if vehicle has fuel entries
+    const fuelEntriesCount = await db.fuelEntry.count({
+      where: { vehicleId: params.id }
+    });
+
+    if (fuelEntriesCount > 0) {
+      return NextResponse.json(
+        { error: 'Cannot delete vehicle with existing fuel entries. Deactivate it instead.' },
+        { status: 400 }
+      );
+    }
+
+    await db.vehicle.delete({
+      where: { id: params.id }
+    });
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error('Error deleting vehicle:', error);
+    return NextResponse.json(
+      { error: 'Failed to delete vehicle' },
       { status: 500 }
     );
   }
