@@ -9,7 +9,7 @@ import FuelHistoryLoading from '@/components/fuel-history-loading';
 import FuelStatistics from '@/components/fuel-statistics';
 import FuelMonthlyStats from '@/components/fuel-monthly-stats';
 import FuelEntryModal from '@/components/fuel-entry-modal';
-import SettingsModal from '@/components/settings-modal';
+//import SettingsModal from '@/components/settings-modal';
 import VehicleSelector from '@/components/vehicle-selector';
 import VehicleManagementModal from '@/components/vehicle-management-modal';
 import MaintenanceCostHistory from '@/components/maintenance-cost-history';
