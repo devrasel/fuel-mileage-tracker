@@ -4,7 +4,7 @@ import { db } from '@/lib/db';
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
-) {
+): Promise<NextResponse> {
   try {
     const vehicle = await db.vehicle.findUnique({
       where: { id: params.id },
@@ -27,7 +27,7 @@ export async function GET(
 export async function PUT(
   request: NextRequest,
   { params }: { params: { id:string } }
-) {
+): Promise<NextResponse> {
   try {
     const body = await request.json();
     const { name, make, model, year, licensePlate, color, isActive } = body;
@@ -65,7 +65,7 @@ export async function PUT(
 export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } }
-) {
+): Promise<NextResponse> {
   try {
     // Check if vehicle has fuel entries
     const fuelEntriesCount = await db.fuelEntry.count({
