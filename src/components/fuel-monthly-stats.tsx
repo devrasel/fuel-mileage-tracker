@@ -278,12 +278,12 @@ export default function FuelMonthlyStats({ entries, settings }: FuelMonthlyStats
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4">
                         {/* Cost Statistics */}
                         <div className="space-y-3">
                           <div className="flex items-center gap-2">
                             <DollarSign className="h-3 w-3 text-green-600" />
-                            <span className="text-xs font-medium">Cost Analysis</span>
+                            <span className="text-sm font-medium">Cost Analysis</span>
                           </div>
                           <div className="space-y-2">
                             <div>
@@ -306,7 +306,7 @@ export default function FuelMonthlyStats({ entries, settings }: FuelMonthlyStats
                         <div className="space-y-3">
                           <div className="flex items-center gap-2">
                             <Fuel className="h-3 w-3 text-blue-600" />
-                            <span className="text-xs font-medium">Fuel Analysis</span>
+                            <span className="text-sm font-medium">Fuel Analysis</span>
                           </div>
                           <div className="space-y-2">
                             <div>
@@ -329,7 +329,7 @@ export default function FuelMonthlyStats({ entries, settings }: FuelMonthlyStats
                         <div className="space-y-3">
                           <div className="flex items-center gap-2">
                             <Gauge className="h-3 w-3 text-purple-600" />
-                            <span className="text-xs font-medium">Distance Analysis</span>
+                            <span className="text-sm font-medium">Distance Analysis</span>
                           </div>
                           <div className="space-y-2">
                             <div>
@@ -352,7 +352,7 @@ export default function FuelMonthlyStats({ entries, settings }: FuelMonthlyStats
                         <div className="space-y-3">
                           <div className="flex items-center gap-2">
                             <TrendingUp className="h-3 w-3 text-orange-600" />
-                            <span className="text-xs font-medium">Mileage Analysis</span>
+                            <span className="text-sm font-medium">Mileage Analysis</span>
                           </div>
                           <div className="space-y-2">
                             <div>
