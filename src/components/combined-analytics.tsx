@@ -92,12 +92,12 @@ export default function CombinedAnalytics({ fuelStats, maintenanceStats, setting
       </div>
 
       {/* Key Metrics Overview */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         <Card className="border-l-4 border-l-blue-500">
           <CardContent className="p-3 sm:p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs sm:text-sm text-muted-foreground">Total Distance</p>
+                <p className="text-xs sm:text-sm text-black">Total Distance</p>
                 <p className="text-lg sm:text-xl font-bold text-blue-600">
                   {formatNumber(fuelStats.totalDistance, 0)} {settings?.distanceUnit || 'km'}
                 </p>
@@ -111,7 +111,7 @@ export default function CombinedAnalytics({ fuelStats, maintenanceStats, setting
           <CardContent className="p-3 sm:p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs sm:text-sm text-muted-foreground">Total Cost</p>
+                <p className="text-xs sm:text-sm text-black">Total Cost</p>
                 <p className="text-lg sm:text-xl font-bold text-green-600">
                   {formatCurrency(totalVehicleCost)}
                 </p>
@@ -125,7 +125,7 @@ export default function CombinedAnalytics({ fuelStats, maintenanceStats, setting
           <CardContent className="p-3 sm:p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs sm:text-sm text-muted-foreground">Mileage</p>
+                <p className="text-xs sm:text-sm text-black">Average Mileage</p>
                 <p className="text-lg sm:text-xl font-bold text-purple-600">
                   {formatNumber(fuelStats.mileagePerLiter, 2)} km/L
                 </p>
@@ -139,7 +139,7 @@ export default function CombinedAnalytics({ fuelStats, maintenanceStats, setting
           <CardContent className="p-3 sm:p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs sm:text-sm text-muted-foreground">Cost per km</p>
+                <p className="text-xs sm:text-sm text-black">Cost per km</p>
                 <p className="text-lg sm:text-xl font-bold text-orange-600">
                   {formatCurrency(costEfficiency)}
                 </p>
