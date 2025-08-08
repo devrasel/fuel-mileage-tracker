@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { formatCurrency } from '@/utils/currency';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Trash2, MapPin, FileText, Edit, ChevronLeft, ChevronRight, AlertTriangle, CheckCircle, Route } from 'lucide-react';
+import { Calendar, Trash2, MapPin, FileText, Edit, ChevronLeft, ChevronRight, AlertTriangle, CheckCircle, Route } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { formatDate } from '@/utils/date';
 
@@ -236,19 +236,22 @@ export default function FuelHistory({ entries, onEntryDeleted, onEntryEdited, se
                 .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0];
               
               return (
-                <div key={entry.id} className="space-y-1 sm:space-y-2">
+                <div key={entry.id} className="space-y-1 sm:space-y-2 mb-4">
                   <div
-                    className={`border rounded-lg p-1.5 sm:p-3 space-y-1.5 sm:space-y-3 hover:bg-muted/50 transition-colors ${
+                    className={`border rounded-lg p-3 sm:p-3 space-y-1.5 sm:space-y-3 hover:bg-muted/50 transition-colors ${
                       entry.fuelType === 'PARTIAL' ? 'ml-1 sm:ml-2 border-l-4 border-l-blue-500' : ''
                     }`}
                   >
-                    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-1 sm:gap-2">
+                    <div className="flex flex-row sm:flex-row sm:items-start justify-between gap-1 sm:gap-2 pb-1">
                       <div className="space-y-0.5 flex-1 min-w-0">
-                        <div className="flex flex-wrap items-center gap-0.5 sm:gap-1">
-                          <span className="font-medium text-xs sm:text-sm">{formatDateDisplay(entry.date)}</span>
-                          <Badge variant={entry.fuelType === 'FULL' ? 'default' : 'secondary'} className="text-xs">
-                            {entry.fuelType}
-                          </Badge>
+                        <div className="flex flex-wrap items-center gap-1 sm:gap-1">
+                         <Calendar className="h-4 w-4 text-gray-500" />
+                          <span className="font-medium text-sm sm:text-sm">{formatDateDisplay(entry.date)}</span>
+                          {entry.fuelType === 'PARTIAL' &&
+                            <Badge variant={'secondary'} className="text-xs">
+                              {entry.fuelType}
+                            </Badge>
+                          }
                           {entry.location && (
                             <Badge variant="outline" className="text-xs">
                               <MapPin className="h-2 w-2 mr-1" />
@@ -288,17 +291,17 @@ export default function FuelHistory({ entries, onEntryDeleted, onEntryEdited, se
                       </div>
                     </div>
                     
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 sm:gap-2 text-xs sm:text-sm">
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-2 text-xs sm:text-sm pb-2">
                       <div className="min-w-0">
-                        <div className="text-muted-foreground text-xs">
-                          Total Cost
+                        <div className="text-black text-xs">
+                          Total Fuel Cost
                           {hasPartials && (
                             <span className="text-xs text-blue-600 ml-1">
                               (+{partialEntries.length})
                             </span>
                           )}
                         </div>
-                        <div className="font-medium text-xs truncate">
+                        <div className="font-bold text-sm truncate">
                           {formatCurrency(entry.totalCost, settings)}
                           {hasPartials && (
                             <span className="text-xs text-blue-600 ml-1">
@@ -307,20 +310,20 @@ export default function FuelHistory({ entries, onEntryDeleted, onEntryEdited, se
                           )}
                         </div>
                       </div>
-                      <div className="min-w-0">
-                        <div className="text-muted-foreground text-xs">Cost/L</div>
-                        <div className="font-medium text-xs truncate">{formatCurrency(entry.costPerLiter, settings)}</div>
+                      <div className="min-w-0 text-right">
+                        <div className="text-black text-xs">Fuel Cost/L</div>
+                        <div className="font-bold text-sm truncate">{formatCurrency(entry.costPerLiter, settings)}</div>
                       </div>
                       <div className="min-w-0">
-                        <div className="text-muted-foreground text-xs">
-                          Liters
+                        <div className="text-black text-xs">
+                          Total Fuel
                           {hasPartials && (
                             <span className="text-xs text-blue-600 ml-1">
                               (+{partialEntries.length})
                             </span>
                           )}
                         </div>
-                        <div className="font-medium text-xs truncate">
+                        <div className="font-bold text-sm truncate">
                           {formatNumber(entry.liters, 2)} {settings?.volumeUnit || 'L'}
                           {hasPartials && (
                             <span className="text-xs text-blue-600 ml-1">
@@ -329,25 +332,9 @@ export default function FuelHistory({ entries, onEntryDeleted, onEntryEdited, se
                           )}
                         </div>
                       </div>
-                      <div className="min-w-0">
-                        <div className="text-muted-foreground text-xs">Odometer</div>
-                        <div className="font-medium text-xs truncate font-semibold text-blue-700">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            className="inline-block h-4 w-4 mr-1"
-                          >
-                            <path d="M9 17a5 5 0 1 1 0-10 5 5 0 0 1 0 10z" />
-                            <path d="M21 17a5 5 0 1 1 0-10 5 5 0 0 1 0 10z" />
-                            <path d="M3 17h18M5 7l1 5h12l1-5" />
-                          </svg>
+                      <div className="min-w-0 text-right">
+                        <div className="text-black text-xs">Odometer</div>
+                        <div className="font-bold text-sm truncate">
                           {formatNumber(entry.odometer, 1)} {settings?.distanceUnit || 'km'}
                           {hasPartials && partialEntries.some(p => p.odometerExtraKm && p.odometerExtraKm > 0) && (
                             <span className="text-xs text-purple-600 ml-1">
@@ -405,13 +392,10 @@ export default function FuelHistory({ entries, onEntryDeleted, onEntryEdited, se
                           </div>
                         </div>
                         {getMileageForEntry(entry, prevFullEntry) && (
-                          <div className="flex items-center justify-between">
+                          <div className="text-center border-t border-purple-200 pt-1 mt-1">
                             <div className="text-xs text-purple-600">
                               Efficiency: {getMileageForEntry(entry, prevFullEntry)! >= 40 ? "Excellent!" : 
                                          getMileageForEntry(entry, prevFullEntry)! >= 30 ? "Good" : "Needs Improvement"}
-                            </div>
-                            <div className="text-xs text-green-600 font-medium">
-                              📊 {getDistanceCovered(entry, prevFullEntry) ? `${formatNumber(getDistanceCovered(entry, prevFullEntry)!, 1)} ${settings?.distanceUnit || 'km'} traveled` : ''}
                             </div>
                           </div>
                         )}
