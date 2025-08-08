@@ -3,11 +3,11 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Settings, Save, RotateCcw, User, Phone, Mail, Code, Globe, HelpCircle, Fuel, Wrench } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 interface SettingsData {
   currency: string;
@@ -170,315 +170,328 @@ export default function SettingsTab({ settings, onSettingsUpdated }: SettingsTab
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Application Settings */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
-              <Globe className="h-4 w-4 sm:h-5 sm:w-5" />
-              Application Settings
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div>
-              <Label htmlFor="currency">Currency</Label>
-              <Select value={currentSettings.currency} onValueChange={(value) => setCurrentSettings(prev => ({ ...prev, currency: value }))}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select currency" />
-                </SelectTrigger>
-                <SelectContent>
-                  {currencyOptions.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <p className="text-sm text-muted-foreground mt-1">
-                Currency used for displaying costs and prices
-              </p>
-            </div>
-
-            <div>
-              <Label htmlFor="dateFormat">Date Format</Label>
-              <Select value={currentSettings.dateFormat} onValueChange={(value) => setCurrentSettings(prev => ({ ...prev, dateFormat: value }))}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select date format" />
-                </SelectTrigger>
-                <SelectContent>
-                  {dateFormatOptions.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <p className="text-sm text-muted-foreground mt-1">
-                Format for displaying dates throughout the application
-              </p>
-            </div>
-
-            <div>
-              <Label htmlFor="distanceUnit">Distance Unit</Label>
-              <Select value={currentSettings.distanceUnit} onValueChange={(value) => setCurrentSettings(prev => ({ ...prev, distanceUnit: value }))}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select distance unit" />
-                </SelectTrigger>
-                <SelectContent>
-                  {distanceUnitOptions.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <p className="text-sm text-muted-foreground mt-1">
-                Unit for displaying odometer readings and distances
-              </p>
-            </div>
-
-            <div>
-              <Label htmlFor="volumeUnit">Volume Unit</Label>
-              <Select value={currentSettings.volumeUnit} onValueChange={(value) => setCurrentSettings(prev => ({ ...prev, volumeUnit: value }))}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select volume unit" />
-                </SelectTrigger>
-                <SelectContent>
-                  {volumeUnitOptions.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <p className="text-sm text-muted-foreground mt-1">
-                Unit for displaying fuel volume amounts
-              </p>
-            </div>
-
-            <div>
-              <Label htmlFor="entriesPerPage">Fuel History Entries Per Page</Label>
-              <Select value={currentSettings.entriesPerPage.toString()} onValueChange={(value) => setCurrentSettings(prev => ({ ...prev, entriesPerPage: parseInt(value) }))}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select entries per page" />
-                </SelectTrigger>
-                <SelectContent>
-                  {entriesPerPageOptions.map((option) => (
-                    <SelectItem key={option.value} value={option.value.toString()}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <p className="text-sm text-muted-foreground mt-1">
-                Number of fuel entries to display per page in the fuel history
-              </p>
-            </div>
-
-            <div>
-              <Label htmlFor="timezone">Timezone</Label>
-              <Select value={currentSettings.timezone} onValueChange={(value) => setCurrentSettings(prev => ({ ...prev, timezone: value }))}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select timezone" />
-                </SelectTrigger>
-                <SelectContent>
-                  {timezoneOptions.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <p className="text-sm text-muted-foreground mt-1">
-                Timezone used for displaying dates and times throughout the application
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Preview & Developer Info */}
-        <div className="space-y-6">
-          {/* Account Security */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
-                <User className="h-4 w-4 sm:h-5 sm:w-5" />
-                Account Security
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Button onClick={() => window.location.href = '/set-security-questions'}>
-                Update Security Questions
-              </Button>
-              <p className="text-sm text-muted-foreground mt-2">
-                Set up security questions to recover your account if you forget your password.
-              </p>
-            </CardContent>
-          </Card>
-
-          {/* Settings Preview */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
-                <Code className="h-4 w-4 sm:h-5 sm:w-5" />
-                Settings Preview
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="font-medium text-sm">Currency:</span>
-                  <Badge variant="outline">
-                    {currencyOptions.find(c => c.value === currentSettings.currency)?.symbol}25.50
-                  </Badge>
+      <Tabs defaultValue="settings" className="w-full">
+        <TabsList className="modern-sub-tabs-list flex w-full justify-center">
+          <TabsTrigger value="settings" className="modern-sub-tab-trigger flex items-center gap-2"><Settings className="tab-icon text-sm transition-colors duration-200" />Settings</TabsTrigger>
+          <TabsTrigger value="security" className="modern-sub-tab-trigger flex items-center gap-2"><User className="tab-icon transition-colors duration-200" />Security</TabsTrigger>
+          <TabsTrigger value="faqs" className="modern-sub-tab-trigger flex items-center gap-2"><HelpCircle className="tab-icon transition-colors duration-200" />About</TabsTrigger>
+        </TabsList>
+        <TabsContent value="settings">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+            {/* Application Settings */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+                  <Globe className="h-4 w-4 sm:h-5 sm:w-5" />
+                  Application Settings
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <Label htmlFor="currency">Currency</Label>
+                  <Select value={currentSettings.currency} onValueChange={(value) => setCurrentSettings(prev => ({ ...prev, currency: value }))}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select currency" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {currencyOptions.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Currency used for displaying costs and prices
+                  </p>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="font-medium text-sm">Date:</span>
-                  <Badge variant="outline">
-                    {new Date().toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: '2-digit',
-                      day: '2-digit',
-                      timeZone: currentSettings.timezone
-                    })}
-                  </Badge>
+
+                <div>
+                  <Label htmlFor="dateFormat">Date Format</Label>
+                  <Select value={currentSettings.dateFormat} onValueChange={(value) => setCurrentSettings(prev => ({ ...prev, dateFormat: value }))}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select date format" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {dateFormatOptions.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Format for displaying dates throughout the application
+                  </p>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="font-medium text-sm">Distance:</span>
-                  <Badge variant="outline">
-                    123,456.7 {currentSettings.distanceUnit}
-                  </Badge>
+
+                <div>
+                  <Label htmlFor="distanceUnit">Distance Unit</Label>
+                  <Select value={currentSettings.distanceUnit} onValueChange={(value) => setCurrentSettings(prev => ({ ...prev, distanceUnit: value }))}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select distance unit" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {distanceUnitOptions.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Unit for displaying odometer readings and distances
+                  </p>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="font-medium text-sm">Volume:</span>
-                  <Badge variant="outline">
-                    45.50 {currentSettings.volumeUnit}
-                  </Badge>
+
+                <div>
+                  <Label htmlFor="volumeUnit">Volume Unit</Label>
+                  <Select value={currentSettings.volumeUnit} onValueChange={(value) => setCurrentSettings(prev => ({ ...prev, volumeUnit: value }))}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select volume unit" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {volumeUnitOptions.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Unit for displaying fuel volume amounts
+                  </p>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="font-medium text-sm">Timezone:</span>
-                  <Badge variant="outline" className="text-xs">
-                    {timezoneOptions.find(t => t.value === currentSettings.timezone)?.label || currentSettings.timezone}
-                  </Badge>
+
+                <div>
+                  <Label htmlFor="entriesPerPage">Fuel History Entries Per Page</Label>
+                  <Select value={currentSettings.entriesPerPage.toString()} onValueChange={(value) => setCurrentSettings(prev => ({ ...prev, entriesPerPage: parseInt(value) }))}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select entries per page" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {entriesPerPageOptions.map((option) => (
+                        <SelectItem key={option.value} value={option.value.toString()}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Number of fuel entries to display per page in the fuel history
+                  </p>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="font-medium text-sm">Current Time:</span>
-                  <Badge variant="outline">
-                    {new Date().toLocaleTimeString('en-US', {
-                      timeZone: currentSettings.timezone,
-                      hour: '2-digit',
-                      minute: '2-digit'
-                    })}
-                  </Badge>
+
+                <div>
+                  <Label htmlFor="timezone">Timezone</Label>
+                  <Select value={currentSettings.timezone} onValueChange={(value) => setCurrentSettings(prev => ({ ...prev, timezone: value }))}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select timezone" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {timezoneOptions.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Timezone used for displaying dates and times throughout the application
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Settings Preview */}
+            <div className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+                    <Code className="h-4 w-4 sm:h-5 sm:w-5" />
+                    Settings Preview
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="font-medium text-sm">Currency:</span>
+                      <Badge variant="outline">
+                        {currencyOptions.find(c => c.value === currentSettings.currency)?.symbol}25.50
+                      </Badge>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="font-medium text-sm">Date:</span>
+                      <Badge variant="outline">
+                        {new Date().toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: '2-digit',
+                          day: '2-digit',
+                          timeZone: currentSettings.timezone
+                        })}
+                      </Badge>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="font-medium text-sm">Distance:</span>
+                      <Badge variant="outline">
+                        123,456.7 {currentSettings.distanceUnit}
+                      </Badge>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="font-medium text-sm">Volume:</span>
+                      <Badge variant="outline">
+                        45.50 {currentSettings.volumeUnit}
+                      </Badge>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="font-medium text-sm">Timezone:</span>
+                      <Badge variant="outline" className="text-xs">
+                        {timezoneOptions.find(t => t.value === currentSettings.timezone)?.label || currentSettings.timezone}
+                      </Badge>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="font-medium text-sm">Current Time:</span>
+                      <Badge variant="outline">
+                        {new Date().toLocaleTimeString('en-US', {
+                          timeZone: currentSettings.timezone,
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </Badge>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+          {/* Action Buttons */}
+          <Card className="mt-6">
+            <CardContent className="pt-6">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                <Button
+                  variant="outline"
+                  onClick={resetToDefaults}
+                  className="flex items-center gap-2 w-full sm:w-auto"
+                >
+                  <RotateCcw className="h-4 w-4" />
+                  Reset to Defaults
+                </Button>
+                
+                <div className="flex items-center gap-4 w-full sm:w-auto">
+                  {message && (
+                    <span className={`text-sm ${message.includes('success') ? 'text-green-600' : 'text-red-600'}`}>
+                      {message}
+                    </span>
+                  )}
+                  <Button
+                    onClick={saveSettings}
+                    disabled={isSaving}
+                    className="flex items-center gap-2 w-full sm:w-auto"
+                  >
+                    <Save className="h-4 w-4" />
+                    {isSaving ? 'Saving...' : 'Save Settings'}
+                  </Button>
                 </div>
               </div>
             </CardContent>
           </Card>
+        </TabsContent>
+        <TabsContent value="security">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+            {/* Account Security */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+                  <User className="h-4 w-4 sm:h-5 sm:w-5" />
+                  Account Security
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Button onClick={() => window.location.href = '/set-security-questions'}>
+                  Update Security Questions
+                </Button>
+                <p className="text-sm text-muted-foreground mt-2">
+                  Set up security questions to recover your account if you forget your password.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+        <TabsContent value="faqs">
+          <div className="space-y-6 mt-6">
+            {/* "How to Use" Guide */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <HelpCircle className="h-5 w-5" />
+                  How to Use This App
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4 text-sm">
+                <div>
+                  <h4 className="font-semibold mb-1">1. Manage Your Vehicles</h4>
+                  <p className="text-muted-foreground">
+                    Use the vehicle selector at the top to switch between your vehicles or click "Manage" to add, edit, or reorder them. All data you enter is tied to the currently selected vehicle.
+                  </p>
+                </div>
+                <div>
+                  <h4 className="font-semibold mb-1">2. Log Fuel & Maintenance</h4>
+                  <p className="text-muted-foreground">
+                    Use the <Button variant="ghost" size="icon" className="inline-flex items-center justify-center w-6 h-6 bg-green-600 text-white rounded-full"><Fuel className="h-4 w-4" /></Button> and <Button variant="ghost" size="icon" className="inline-flex items-center justify-center w-6 h-6 bg-orange-500 text-white rounded-full"><Wrench className="h-4 w-4" /></Button> buttons at the bottom right to quickly add fuel and maintenance entries.
+                  </p>
+                </div>
+                <div>
+                  <h4 className="font-semibold mb-1">3. Analyze Your Data</h4>
+                  <p className="text-muted-foreground">
+                    The "Analytics" tab provides a comprehensive overview of your fuel consumption, costs, and efficiency. Explore the sub-tabs for monthly breakdowns and detailed analysis.
+                  </p>
+                </div>
+                <div>
+                  <h4 className="font-semibold mb-1">4. Vehicle-Specific Information</h4>
+                  <p className="text-muted-foreground">
+                    The "Vehicle" tab contains maintenance logs, service reminders, and this informational guide.
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
 
-          {/* Developer Information */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
-                <User className="h-4 w-4 sm:h-5 sm:w-5" />
-                Developer Information
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                <div className="flex items-center gap-2">
-                  <User className="h-4 w-4 text-muted-foreground" />
-                  <div>
-                    <div className="font-medium text-sm">Developer</div>
-                    <div className="text-sm text-muted-foreground">Rasel Ahmed</div>
+            {/* Developer Information */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+                  <User className="h-4 w-4 sm:h-5 sm:w-5" />
+                  Developer Information
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2">
+                    <User className="h-4 w-4 text-muted-foreground" />
+                    <div>
+                      <div className="font-medium text-sm">Developer</div>
+                      <div className="text-sm text-muted-foreground">Rasel Ahmed</div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Phone className="h-4 w-4 text-muted-foreground" />
+                    <div>
+                      <div className="font-medium text-sm">Contact</div>
+                      <div className="text-sm text-muted-foreground">+8801744779727</div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Mail className="h-4 w-4 text-muted-foreground" />
+                    <div>
+                      <div className="font-medium text-sm">Email</div>
+                      <div className="text-sm text-muted-foreground">bdmixbd@gmail.com</div>
+                    </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Phone className="h-4 w-4 text-muted-foreground" />
-                  <div>
-                    <div className="font-medium text-sm">Contact</div>
-                    <div className="text-sm text-muted-foreground">+8801744779727</div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Mail className="h-4 w-4 text-muted-foreground" />
-                  <div>
-                    <div className="font-medium text-sm">Email</div>
-                    <div className="text-sm text-muted-foreground">bdmixbd@gmail.com</div>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-
-      {/* Action Buttons */}
-      <Card>
-        <CardContent className="pt-6">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <Button
-              variant="outline"
-              onClick={resetToDefaults}
-              className="flex items-center gap-2 w-full sm:w-auto"
-            >
-              <RotateCcw className="h-4 w-4" />
-              Reset to Defaults
-            </Button>
-            
-            <div className="flex items-center gap-4 w-full sm:w-auto">
-              {message && (
-                <span className={`text-sm ${message.includes('success') ? 'text-green-600' : 'text-red-600'}`}>
-                  {message}
-                </span>
-              )}
-              <Button
-                onClick={saveSettings}
-                disabled={isSaving}
-                className="flex items-center gap-2 w-full sm:w-auto"
-              >
-                <Save className="h-4 w-4" />
-                {isSaving ? 'Saving...' : 'Save Settings'}
-              </Button>
-            </div>
+              </CardContent>
+            </Card>
           </div>
-        </CardContent>
-      </Card>
-      
-      {/* "How to Use" Guide */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <HelpCircle className="h-5 w-5" />
-            How to Use This App
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4 text-sm">
-          <div>
-            <h4 className="font-semibold mb-1">1. Manage Your Vehicles</h4>
-            <p className="text-muted-foreground">
-              Use the vehicle selector at the top to switch between your vehicles or click "Manage" to add, edit, or reorder them. All data you enter is tied to the currently selected vehicle.
-            </p>
-          </div>
-          <div>
-            <h4 className="font-semibold mb-1">2. Log Fuel & Maintenance</h4>
-            <p className="text-muted-foreground">
-              Use the <Button variant="ghost" size="icon" className="inline-flex items-center justify-center w-6 h-6 bg-green-600 text-white rounded-full"><Fuel className="h-4 w-4" /></Button> and <Button variant="ghost" size="icon" className="inline-flex items-center justify-center w-6 h-6 bg-orange-500 text-white rounded-full"><Wrench className="h-4 w-4" /></Button> buttons at the bottom right to quickly add fuel and maintenance entries.
-            </p>
-          </div>
-          <div>
-            <h4 className="font-semibold mb-1">3. Analyze Your Data</h4>
-            <p className="text-muted-foreground">
-              The "Analytics" tab provides a comprehensive overview of your fuel consumption, costs, and efficiency. Explore the sub-tabs for monthly breakdowns and detailed analysis.
-            </p>
-          </div>
-          <div>
-            <h4 className="font-semibold mb-1">4. Vehicle-Specific Information</h4>
-            <p className="text-muted-foreground">
-              The "Vehicle" tab contains maintenance logs, service reminders, and this informational guide.
-            </p>
-          </div>
-        </CardContent>
-      </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
