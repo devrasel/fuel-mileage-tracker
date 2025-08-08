@@ -213,8 +213,9 @@ export default function VehicleInfo({ selectedVehicleId, settings }: VehicleInfo
               {vehicle.name} Details
             </CardTitle>
             <Button variant="outline" size="sm">
-              <Edit className="h-4 w-4 mr-2" />
-              Edit
+              <Badge variant={vehicle.isActive ? "default" : "secondary"}>
+                    {vehicle.isActive ? "Active" : "Inactive"}
+                  </Badge>
             </Button>
           </div>
         </CardHeader>
@@ -239,7 +240,7 @@ export default function VehicleInfo({ selectedVehicleId, settings }: VehicleInfo
                 </div>
               </div>
 
-              <div className="space-y-3">
+              <div className="flex gap-2 mr-2">
                 {vehicle.licensePlate && (
                   <div className="flex items-center gap-2">
                     <FileText className="h-4 w-4 text-muted-foreground" />
@@ -265,19 +266,19 @@ export default function VehicleInfo({ selectedVehicleId, settings }: VehicleInfo
             <div className="space-y-4">
               <h4 className="font-medium">Quick Stats</h4>
               <div className="grid grid-cols-2 gap-4">
-                <div className="text-center p-3 bg-muted/30 rounded-lg">
+                <div className="text-center p-3 bg-muted/30 rounded-lg border border-blue-400">
                   <p className="text-2xl font-bold text-blue-600">{vehicleStats.totalFuelEntries}</p>
                   <p className="text-xs text-muted-foreground">Fuel Entries</p>
                 </div>
-                <div className="text-center p-3 bg-muted/30 rounded-lg">
+                <div className="text-center p-3 bg-muted/30 rounded-lg border border-orange-400">
                   <p className="text-2xl font-bold text-orange-600">{vehicleStats.totalMaintenanceEntries}</p>
                   <p className="text-xs text-muted-foreground">Maintenance</p>
                 </div>
-                <div className="text-center p-3 bg-muted/30 rounded-lg">
+                <div className="text-center p-3 bg-muted/30 rounded-lg border border-green-400">
                   <p className="text-2xl font-bold text-green-600">{formatNumber(vehicleStats.totalDistance, 0)}</p>
                   <p className="text-xs text-muted-foreground">Total KM</p>
                 </div>
-                <div className="text-center p-3 bg-muted/30 rounded-lg">
+                <div className="text-center p-3 bg-muted/30 rounded-lg border border-purple-400">
                   <p className="text-2xl font-bold text-purple-600">{vehicleStats.daysSinceAdded}</p>
                   <p className="text-xs text-muted-foreground">Days Tracked</p>
                 </div>
