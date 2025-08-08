@@ -247,7 +247,7 @@ export default function VehicleManagementModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+      <DialogContent className="w-full max-w-4xl max-h-[90vh] overflow-y-auto p-4 sm:p-6">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Car className="h-5 w-5" />
@@ -266,7 +266,7 @@ export default function VehicleManagementModal({
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                   <div>
                     <Label htmlFor="name">Vehicle Name *</Label>
                     <Input
@@ -333,7 +333,7 @@ export default function VehicleManagementModal({
                   <Label htmlFor="isActive">Active</Label>
                 </div>
 
-                <div className="flex gap-2 pt-4">
+                <div className="flex flex-wrap gap-2 pt-4">
                   <Button onClick={handleSave} className="flex items-center gap-2">
                     <Save className="h-4 w-4" />
                     Save
@@ -349,7 +349,7 @@ export default function VehicleManagementModal({
 
           {/* Vehicle List */}
           <div className="space-y-4">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-wrap items-center justify-between gap-2">
               <h3 className="text-lg font-medium">Your Vehicles</h3>
               <div className="flex items-center gap-2">
                 <Button
@@ -382,7 +382,7 @@ export default function VehicleManagementModal({
                 {vehicles.map((vehicle, index) => (
                   <Card key={vehicle.id}>
                     <CardContent className="p-4">
-                      <div className="flex items-center justify-between">
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                         <div className="flex-1">
                           <div className="flex items-center gap-3">
                             <div>
@@ -407,7 +407,7 @@ export default function VehicleManagementModal({
                           </div>
                         </div>
                         
-                        <div className="flex items-center gap-2 ml-4">
+                        <div className="flex flex-wrap items-center gap-2 ml-4">
                           <div className="flex flex-col mr-2">
                             <Button
                               variant="ghost"
