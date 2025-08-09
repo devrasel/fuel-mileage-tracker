@@ -5,7 +5,17 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { formatCurrency } from '@/utils/currency';
 import { Badge } from '@/components/ui/badge';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Calendar, Trash2, MapPin, FileText, Edit, ChevronLeft, ChevronRight, AlertTriangle, CheckCircle, Route } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { formatDate } from '@/utils/date';
@@ -37,6 +47,7 @@ export default function FuelHistory({ entries, onEntryDeleted, onEntryEdited, se
   const { toast } = useToast();
   const [currentPage, setCurrentPage] = useState(1);
   const [expandedEntries, setExpandedEntries] = useState<Set<string>>(new Set());
+  const [deleteCandidateId, setDeleteCandidateId] = useState<string | null>(null);
   const entriesPerPage = settings?.entriesPerPage || 10;
 
   // Reset to page 1 when entries per page changes or when entries change
@@ -56,18 +67,15 @@ export default function FuelHistory({ entries, onEntryDeleted, onEntryEdited, se
   const startIndex = (currentPage - 1) * entriesPerPage;
   const paginatedEntries = mainEntries.slice(startIndex, startIndex + entriesPerPage);
 
-  const deleteEntry = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this entry? This will also delete any associated partial entries.')) {
-      return;
-    }
+  const handleDeleteConfirm = async () => {
+    if (!deleteCandidateId) return;
 
     try {
-      const response = await fetch(`/api/fuel/delete?id=${id}`, {
+      const response = await fetch(`/api/fuel/delete?id=${deleteCandidateId}`, {
         method: 'DELETE',
       });
 
       if (response.ok) {
-        // Show success toast
         toast({
           title: "Deleted!",
           description: "Fuel entry deleted successfully.",
@@ -78,10 +86,8 @@ export default function FuelHistory({ entries, onEntryDeleted, onEntryEdited, se
             </div>
           ),
         });
-        
         onEntryDeleted();
       } else {
-        // Show error toast
         toast({
           title: "Error!",
           description: "Failed to delete fuel entry. Please try again.",
@@ -90,12 +96,13 @@ export default function FuelHistory({ entries, onEntryDeleted, onEntryEdited, se
       }
     } catch (error) {
       console.error('Error deleting entry:', error);
-      // Show error toast
       toast({
         title: "Error!",
         description: "An error occurred while deleting the fuel entry.",
         variant: "destructive",
       });
+    } finally {
+      setDeleteCandidateId(null);
     }
   };
 
@@ -266,10 +273,10 @@ export default function FuelHistory({ entries, onEntryDeleted, onEntryEdited, se
                             variant="ghost"
                             size="sm"
                             onClick={() => toggleExpanded(entry.id)}
-                            className="text-blue-500 h-6 w-6 sm:h-8 sm:w-auto p-0.5 sm:p-1 text-xs"
+                            className="text-blue-500 h-6 w-6 sm:h-8 sm:w-auto mr-2.5 p-0.5 sm:p-1 text-xs"
                           >
                             <span className="hidden sm:inline">{isExpanded ? 'Hide' : 'Show'} ({partialEntries.length})</span>
-                            <span className="sm:hidden">{isExpanded ? 'H' : 'S'} ({partialEntries.length})</span>
+                            <span className="sm:hidden">{isExpanded ? 'Hide' : 'See'} ({partialEntries.length})</span>
                           </Button>
                         )}
                         <Button
@@ -280,14 +287,30 @@ export default function FuelHistory({ entries, onEntryDeleted, onEntryEdited, se
                         >
                           <Edit className="h-2 w-2 sm:h-3 sm:w-3" />
                         </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => deleteEntry(entry.id)}
-                          className="text-red-500 hover:text-red-700 hover:bg-red-50 h-6 w-6 sm:h-8 sm:w-auto p-0.5 sm:p-1"
-                        >
-                          <Trash2 className="h-2 w-2 sm:h-3 sm:w-3" />
-                        </Button>
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => setDeleteCandidateId(entry.id)}
+                              className="text-red-500 hover:text-red-700 hover:bg-red-50 h-6 w-6 sm:h-8 sm:w-auto p-0.5 sm:p-1"
+                            >
+                              <Trash2 className="h-2 w-2 sm:h-3 sm:w-3" />
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                This will permanently delete the fuel entry. If it's a full entry with partials, all associated partial entries will also be deleted.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel onClick={() => setDeleteCandidateId(null)}>No</AlertDialogCancel>
+                              <AlertDialogAction onClick={handleDeleteConfirm}>Yes</AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
                       </div>
                     </div>
                     
@@ -311,7 +334,7 @@ export default function FuelHistory({ entries, onEntryDeleted, onEntryEdited, se
                         </div>
                       </div>
                       <div className="min-w-0 text-right">
-                        <div className="text-black text-xs">Fuel Cost/L</div>
+                        <div className="text-black text-xs">Fuel Price/L</div>
                         <div className="font-bold text-sm truncate">{formatCurrency(entry.costPerLiter, settings)}</div>
                       </div>
                       <div className="min-w-0">
@@ -327,7 +350,7 @@ export default function FuelHistory({ entries, onEntryDeleted, onEntryEdited, se
                           {formatNumber(entry.liters, 2)} {settings?.volumeUnit || 'L'}
                           {hasPartials && (
                             <span className="text-xs text-blue-600 ml-1">
-                              → {formatNumber(getCombinedTotals(entry).combinedLiters, 2)}
+                              → {formatNumber(getCombinedTotals(entry).combinedLiters, 2)} L
                             </span>
                           )}
                         </div>
@@ -474,14 +497,30 @@ export default function FuelHistory({ entries, onEntryDeleted, onEntryEdited, se
                               >
                                 <Edit className="h-2 w-2" />
                               </Button>
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => deleteEntry(partial.id)}
-                                className="text-red-500 hover:text-red-700 hover:bg-red-50 h-5 w-5 p-0.5"
-                              >
-                                <Trash2 className="h-2 w-2" />
-                              </Button>
+                              <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => setDeleteCandidateId(partial.id)}
+                                    className="text-red-500 hover:text-red-700 hover:bg-red-50 h-5 w-5 p-0.5"
+                                  >
+                                    <Trash2 className="h-2 w-2" />
+                                  </Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                  <AlertDialogHeader>
+                                    <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                      This will permanently delete the partial fuel entry.
+                                    </AlertDialogDescription>
+                                  </AlertDialogHeader>
+                                  <AlertDialogFooter>
+                                    <AlertDialogCancel onClick={() => setDeleteCandidateId(null)}>No</AlertDialogCancel>
+                                    <AlertDialogAction onClick={handleDeleteConfirm}>Yes</AlertDialogAction>
+                                  </AlertDialogFooter>
+                                </AlertDialogContent>
+                              </AlertDialog>
                             </div>
                           </div>
                           
