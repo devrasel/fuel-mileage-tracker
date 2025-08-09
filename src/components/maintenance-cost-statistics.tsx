@@ -159,32 +159,6 @@ export default function MaintenanceCostStatistics({
         </CardContent>
       </Card>
 
-      {/* Top Categories Card */}
-      {getTopCategories().length > 0 && (
-        <Card className="sm:col-span-2 lg:col-span-4">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-xs">Top Categories by Cost</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
-              {getTopCategories().map(([category, cost]) => (
-                <div key={category} className="space-y-1">
-                  <Badge variant="secondary" className={`text-[10px] w-full justify-center ${getCategoryColor(category)}`}>
-                    {category}
-                  </Badge>
-                  <div className="text-center">
-                    <div className="text-sm font-medium">{formatCurrency(cost)}</div>
-                    <div className="text-[10px] text-muted-foreground">
-                      {stats.totalCost > 0 ? ((cost / stats.totalCost) * 100).toFixed(1) : 0}%
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
     </div>
   );
 }
