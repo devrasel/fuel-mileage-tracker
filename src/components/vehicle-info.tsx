@@ -240,11 +240,11 @@ export default function VehicleInfo({ selectedVehicleId, settings }: VehicleInfo
                 </div>
               </div>
 
-              <div className="flex gap-2 mr-2">
+              <div className="gap-2 mr-2">
                 {vehicle.licensePlate && (
                   <div className="flex items-center gap-2">
                     <FileText className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-sm text-muted-foreground">License Plate:</span>
+                    <span className="text-sm text-muted-foreground">License:</span>
                     <Badge variant="outline">{vehicle.licensePlate}</Badge>
                   </div>
                 )}
@@ -255,7 +255,7 @@ export default function VehicleInfo({ selectedVehicleId, settings }: VehicleInfo
                   <span className="text-sm">{formatDate(vehicle.createdAt)}</span>
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 hidden">
                   <Badge variant={vehicle.isActive ? "default" : "secondary"}>
                     {vehicle.isActive ? "Active" : "Inactive"}
                   </Badge>
