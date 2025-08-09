@@ -279,7 +279,7 @@ export default function FuelMonthlyStats({ entries, settings }: FuelMonthlyStats
                     </CardHeader>
                     <CardContent>
                       <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                        {/* Cost Statistics */}
+                        {/* Cost Statistics  */}
                         <div className="space-y-3">
                           <div className="flex items-center gap-2">
                             <DollarSign className="h-3 w-3 text-green-600" />
