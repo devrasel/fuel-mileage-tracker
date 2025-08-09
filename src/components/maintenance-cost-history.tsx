@@ -6,6 +6,17 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Edit, Trash2, MapPin, Car, FileText } from 'lucide-react';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface MaintenanceCostEntry {
   id: string;
@@ -45,6 +56,7 @@ export default function MaintenanceCostHistory({
   const [isClient, setIsClient] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   
   // Set isClient to true after component mounts
   useEffect(() => {
@@ -74,13 +86,15 @@ export default function MaintenanceCostHistory({
     }).format(amount);
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this maintenance cost entry?')) {
-      return;
-    }
+  const handleDeleteClick = (id: string) => {
     setDeletingId(id);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!deletingId) return;
     try {
-      const response = await fetch(`/api/maintenance-cost?id=${id}`, {
+      const response = await fetch(`/api/maintenance-cost?id=${deletingId}`, {
         method: 'DELETE',
       });
 
@@ -93,6 +107,7 @@ export default function MaintenanceCostHistory({
       console.error('Error deleting maintenance cost:', error);
     } finally {
       setDeletingId(null);
+      setIsDeleteDialogOpen(false);
     }
   };
 
@@ -143,106 +158,123 @@ export default function MaintenanceCostHistory({
   }
 
   return (
-    <Card>
-      <CardHeader className="pb-3">
-        <CardTitle className="text-xs">Maintenance History</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-3">
-        <div className="space-y-2 max-h-96 overflow-y-auto">
-          {paginatedEntries.map((entry) => (
-            <div
-              key={entry.id}
-              className="p-3 border rounded-lg space-y-2 hover:bg-muted/50 transition-colors"
-            >
-              <div className="flex items-start justify-between">
-                <div className="flex-1 space-y-1">
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-medium text-sm">{entry.description}</h3>
-                    <Badge variant="secondary" className={`text-[10px] px-2 py-0 h-5 ${getCategoryColor(entry.category)}`}>
-                      {entry.category}
-                    </Badge>
-                  </div>
-                  
-                  <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                    <span>{formatDate(entry.date)}</span>
-                    <span className="font-medium text-foreground">
-                      {formatCurrency(entry.cost)}
-                    </span>
-                    {entry.odometer && (
-                      <span className="flex items-center gap-1">
-                        <Car className="h-3 w-3" />
-                        {entry.odometer.toLocaleString()} {settings.distanceUnit}
+    <>
+      <Card>
+        <CardHeader className="pb-3">
+          <CardTitle className="text-xs">Maintenance History</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <div className="space-y-2 max-h-96 overflow-y-auto">
+            {paginatedEntries.map((entry) => (
+              <div
+                key={entry.id}
+                className="p-3 border rounded-lg space-y-2 hover:bg-muted/50 transition-colors"
+              >
+                <div className="flex items-start justify-between">
+                  <div className="flex-1 space-y-1">
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-medium text-sm">{entry.description}</h3>
+                      <Badge variant="secondary" className={`text-[10px] px-2 py-0 h-5 ${getCategoryColor(entry.category)}`}>
+                        {entry.category}
+                      </Badge>
+                    </div>
+                    
+                    <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                      <span>{formatDate(entry.date)}</span>
+                      <span className="font-medium text-foreground">
+                        {formatCurrency(entry.cost)}
                       </span>
+                      {entry.odometer && (
+                        <span className="flex items-center gap-1">
+                          <Car className="h-3 w-3" />
+                          {entry.odometer.toLocaleString()} {settings.distanceUnit}
+                        </span>
+                      )}
+                    </div>
+
+                    {entry.location && (
+                      <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                        <MapPin className="h-3 w-3" />
+                        {entry.location}
+                      </div>
+                    )}
+
+                    {entry.notes && (
+                      <div className="flex items-start gap-1 text-xs text-muted-foreground">
+                        <FileText className="h-3 w-3 mt-0.5 flex-shrink-0" />
+                        <span className="leading-tight">{entry.notes}</span>
+                      </div>
                     )}
                   </div>
 
-                  {entry.location && (
-                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                      <MapPin className="h-3 w-3" />
-                      {entry.location}
-                    </div>
-                  )}
-
-                  {entry.notes && (
-                    <div className="flex items-start gap-1 text-xs text-muted-foreground">
-                      <FileText className="h-3 w-3 mt-0.5 flex-shrink-0" />
-                      <span className="leading-tight">{entry.notes}</span>
-                    </div>
-                  )}
-                </div>
-
-                <div className="flex gap-1 ml-2">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => onEntryEdited(entry)}
-                    className="h-6 w-6 p-0"
-                  >
-                    <Edit className="h-3 w-3" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleDelete(entry.id)}
-                    className="h-6 w-6 p-0 text-destructive hover:text-destructive"
-                    disabled={deletingId === entry.id}
-                  >
-                    <Trash2 className="h-3 w-3" />
-                  </Button>
+                  <div className="flex gap-1 ml-2">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onEntryEdited(entry)}
+                      className="h-6 w-6 p-0"
+                    >
+                      <Edit className="h-3 w-3" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleDeleteClick(entry.id)}
+                      className="h-6 w-6 p-0 text-destructive hover:text-destructive"
+                      disabled={deletingId === entry.id}
+                    >
+                      <Trash2 className="h-3 w-3" />
+                    </Button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
-
-        {totalPages > 1 && (
-          <div className="flex items-center justify-between pt-2 border-t">
-            <div className="text-xs text-muted-foreground">
-              Showing {startIndex + 1}-{endIndex} of {entries?.length || 0} entries
-            </div>
-            <div className="flex gap-1">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-                disabled={currentPage === 1}
-                className="h-6 px-2 text-xs"
-              >
-                Previous
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
-                disabled={currentPage === totalPages}
-                className="h-6 px-2 text-xs"
-              >
-                Next
-              </Button>
-            </div>
+            ))}
           </div>
-        )}
-      </CardContent>
-    </Card>
+
+          {totalPages > 1 && (
+            <div className="flex items-center justify-between pt-2 border-t">
+              <div className="text-xs text-muted-foreground">
+                Showing {startIndex + 1}-{endIndex} of {entries?.length || 0} entries
+              </div>
+              <div className="flex gap-1">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                  disabled={currentPage === 1}
+                  className="h-6 px-2 text-xs"
+                >
+                  Previous
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                  disabled={currentPage === totalPages}
+                  className="h-6 px-2 text-xs"
+                >
+                  Next
+                </Button>
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the
+              maintenance cost entry.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete}>Continue</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 }
