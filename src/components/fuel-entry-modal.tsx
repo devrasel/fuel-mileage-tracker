@@ -230,7 +230,7 @@ export default function FuelEntryModal({ isOpen, onClose, onEntrySaved, editingE
           <div className="grid grid-cols-1 gap-3 sm:gap-3">
             <div className="space-y-1">
               <Label htmlFor="datetime" className="text-[11px] sm:text-xs font-medium">
-                Date *
+               Entry Date *
               </Label>
               <DateTimePicker
                 value={formData.date}
@@ -242,13 +242,13 @@ export default function FuelEntryModal({ isOpen, onClose, onEntrySaved, editingE
             
             <div className="space-y-1">
               <Label htmlFor="odometer" className="text-[11px] sm:text-xs font-medium">
-                Odometer ({settings?.distanceUnit || 'km'}) *
+                Current Odometer ({settings?.distanceUnit || 'km'}) *
               </Label>
               <Input
                 id="odometer"
                 type="number"
                 step="0.1"
-                placeholder="123456.7"
+                placeholder="2050.00"
                 value={formData.odometer}
                 onChange={(e) => handleInputChange('odometer', e.target.value)}
                 required
@@ -257,7 +257,7 @@ export default function FuelEntryModal({ isOpen, onClose, onEntrySaved, editingE
             </div>
             
             {formData.fuelType === 'PARTIAL' && (
-              <div className="space-y-1">
+              <div className="space-y-1 hidden">
                 <Label htmlFor="odometerExtraKm" className="text-[11px] sm:text-xs font-medium">
                   Extra km to Add to Last Full Entry ({settings?.distanceUnit || 'km'})
                 </Label>
@@ -281,13 +281,13 @@ export default function FuelEntryModal({ isOpen, onClose, onEntrySaved, editingE
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1">
                 <Label htmlFor="totalCost" className="text-[11px] sm:text-xs font-medium">
-                  Total Cost ({getCurrencySymbol(settings?.currency || 'BDT')}) *
+                  Total Fuel Cost ({getCurrencySymbol(settings?.currency || 'BDT')}) *
                 </Label>
                 <Input
                   id="totalCost"
                   type="number"
                   step="0.01"
-                  placeholder="65.98"
+                  placeholder="500.00"
                   value={formData.totalCost}
                   onChange={(e) => handleInputChange('totalCost', e.target.value)}
                   required
@@ -297,13 +297,13 @@ export default function FuelEntryModal({ isOpen, onClose, onEntrySaved, editingE
               
               <div className="space-y-1">
                 <Label htmlFor="costPerLiter" className="text-[11px] sm:text-xs font-medium">
-                  Cost per {settings?.volumeUnit || 'L'} ({getCurrencySymbol(settings?.currency || 'BDT')}) *
+                  Price Per {settings?.volumeUnit || 'L'} ({getCurrencySymbol(settings?.currency || 'BDT')}) *
                 </Label>
                 <Input
                   id="costPerLiter"
                   type="number"
                   step="0.01"
-                  placeholder="1.45"
+                  placeholder="122.85"
                   value={formData.costPerLiter}
                   onChange={(e) => handleInputChange('costPerLiter', e.target.value)}
                   required
@@ -318,7 +318,7 @@ export default function FuelEntryModal({ isOpen, onClose, onEntrySaved, editingE
                   <Label htmlFor="liters" className="text-[11px] sm:text-xs font-medium">
                     Total {settings?.volumeUnit || 'L'} *
                   </Label>
-                  <Badge variant="outline" className="text-[11px]">
+                  <Badge variant="outline" className="text-[10px]">
                     {autoCalculate ? 'Auto' : 'Manual'}
                   </Badge>
                 </div>
@@ -326,7 +326,7 @@ export default function FuelEntryModal({ isOpen, onClose, onEntrySaved, editingE
                   id="liters"
                   type="number"
                   step="0.01"
-                  placeholder="45.50"
+                  placeholder="50.50"
                   value={formData.liters}
                   onChange={(e) => handleInputChange('liters', e.target.value)}
                   required
@@ -340,7 +340,7 @@ export default function FuelEntryModal({ isOpen, onClose, onEntrySaved, editingE
                 </Label>
                 <Input
                   id="location"
-                  placeholder="Shell Station"
+                  placeholder="Fuel Station"
                   value={formData.location}
                   onChange={(e) => handleInputChange('location', e.target.value)}
                   className="h-10 sm:h-10 border focus:border-primary/30"
@@ -350,40 +350,27 @@ export default function FuelEntryModal({ isOpen, onClose, onEntrySaved, editingE
           </div>
 
           {/* Fuel Type Selection */}
-          <div className="space-y-2 sm:space-y-3 p-3 sm:p-4 bg-muted/30 rounded-lg border border-border">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-3 space-y-2 sm:space-y-0">
+          <div className="space-y-2 sm:space-y-3 pl-3 p-2 sm:p-3 bg-muted/30 rounded-lg border border-border">
+            <div className="flex flex-row sm:flex-row sm:items-center sm:space-x-3 space-y-2 sm:space-y-0">
               <Checkbox
                 id="fuelType"
                 checked={formData.fuelType === 'PARTIAL'}
                 onCheckedChange={(checked) => {
                   handleInputChange('fuelType', checked ? 'PARTIAL' : 'FULL');
                 }}
-                className="data-[state=checked]:bg-primary data-[state=checked]:border-primary h-4 w-4 sm:h-5 sm:w-5"
+                className="mt-2 data-[state=checked]:bg-primary data-[state=checked]:border-primary h-5 w-5 sm:h-5 sm:w-5"
               />
               <Label htmlFor="fuelType" className="flex items-center gap-1 sm:gap-2 cursor-pointer text-sm sm:text-base font-medium">
-                <span className="text-primary">Partial Fuel Entry</span>
+                <span className="text-primary font-bold pl-1">Partial</span>
                 {formData.fuelType === 'PARTIAL' && (
                   <Badge variant="secondary" className="text-xs bg-primary/10 text-primary border-primary/20">
                     <AlertTriangle className="h-3 w-3 mr-1" />
-                    Auto-linked
+                    Linked to most recent entry
                   </Badge>
                 )}
               </Label>
             </div>
 
-            {formData.fuelType === 'PARTIAL' && (
-              <div className="space-y-2 ml-6 sm:ml-8 p-2 sm:p-3 bg-background rounded border border-border">
-                <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm text-muted-foreground">
-                  <AlertTriangle className="h-3 w-3 sm:h-4 sm:w-4 text-primary" />
-                  <span>Auto-linked to most recent full tank</span>
-                </div>
-                {availableFullEntries.length > 0 && (
-                  <div className="text-xs text-muted-foreground">
-                    Will link to: {new Date(availableFullEntries[0].date).toLocaleDateString()} - {availableFullEntries[0].liters}{settings?.volumeUnit || 'L'} at {getCurrencySymbol(settings?.currency || 'BDT')}{availableFullEntries[0].costPerLiter}/{settings?.volumeUnit || 'L'}
-                  </div>
-                )}
-              </div>
-            )}
           </div>
           
           <div className="space-y-1">
