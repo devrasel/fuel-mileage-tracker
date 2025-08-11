@@ -334,7 +334,8 @@ export default function Home() {
           
           <TabsContent value="history" className="space-y-2 sm:space-y-4 py-4 sm:py-6">
             {isLoading ? (
-              <FuelHistoryLoading />
+              //<FuelHistoryLoading />
+              <GeneralLoading message="Loading Fuel Entries..." submessage="Please wait while we fetch your fuel entries" /> 
             ) : (
               <FuelHistory 
                 entries={fuelEntries} 
