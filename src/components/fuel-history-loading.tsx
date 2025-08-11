@@ -4,7 +4,7 @@ import { Fuel, Route, BarChart3 } from 'lucide-react';
 
 export default function FuelHistoryLoading() {
   return (
-    <div className="w-full py-8 sm:py-12">
+    <div className="flex items-center justify-center min-h-screen">
       <div className="text-center space-y-4 sm:space-y-6">
         {/* Animated Fuel Icon */}
         <div className="relative inline-block">
