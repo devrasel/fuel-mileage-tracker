@@ -216,7 +216,7 @@ export default function FuelMonthlyStats({ entries, settings }: FuelMonthlyStats
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex gap-4 items-center">
+          <div className="flex flex-row gap-2 items-center">
             <div className="space-y-2">
               <label className="text-xs font-medium">Year</label>
               <Select value={selectedYear} onValueChange={setSelectedYear}>
@@ -270,17 +270,17 @@ export default function FuelMonthlyStats({ entries, settings }: FuelMonthlyStats
                       <CardTitle className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <Calendar className="h-4 w-4" />
-                          <span className="text-sm">{monthData.month} {monthData.year}</span>
+                          <span className="text-m">{monthData.month} {monthData.year}</span>
                         </div>
-                        <Badge variant="secondary" className="text-xs">
+                        <Badge variant="secondary" className="text-m">
                           {monthData.totalEntries} entries
                         </Badge>
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2">
                         {/* Cost Statistics  */}
-                        <div className="space-y-3">
+                        <div className="space-y-3 p-4 border rounded-lg bg-gray-50/50">
                           <div className="flex items-center gap-2">
                             <DollarSign className="h-3 w-3 text-green-600" />
                             <span className="text-sm font-medium">Cost Analysis</span>
@@ -303,7 +303,7 @@ export default function FuelMonthlyStats({ entries, settings }: FuelMonthlyStats
                         </div>
 
                         {/* Fuel Statistics */}
-                        <div className="space-y-3">
+                        <div className="space-y-3 p-4 border rounded-lg bg-gray-50/50">
                           <div className="flex items-center gap-2">
                             <Fuel className="h-3 w-3 text-blue-600" />
                             <span className="text-sm font-medium">Fuel Analysis</span>
@@ -326,7 +326,7 @@ export default function FuelMonthlyStats({ entries, settings }: FuelMonthlyStats
                         </div>
 
                         {/* Distance Statistics */}
-                        <div className="space-y-3">
+                        <div className="space-y-3 p-4 border rounded-lg bg-gray-50/50">
                           <div className="flex items-center gap-2">
                             <Gauge className="h-3 w-3 text-purple-600" />
                             <span className="text-sm font-medium">Distance Analysis</span>
@@ -349,7 +349,7 @@ export default function FuelMonthlyStats({ entries, settings }: FuelMonthlyStats
                         </div>
 
                         {/* Mileage Statistics */}
-                        <div className="space-y-3">
+                        <div className="space-y-3 p-4 border rounded-lg bg-gray-50/50">
                           <div className="flex items-center gap-2">
                             <TrendingUp className="h-3 w-3 text-orange-600" />
                             <span className="text-sm font-medium">Mileage Analysis</span>
