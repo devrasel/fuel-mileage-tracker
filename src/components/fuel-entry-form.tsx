@@ -159,7 +159,7 @@ export default function FuelEntryForm({ onEntryAdded, editingEntry, onCancelEdit
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="date">Date *</Label>
+              <Label htmlFor="date">Fuel Entry Date *</Label>
               <Input
                 id="date"
                 type="date"
@@ -175,7 +175,7 @@ export default function FuelEntryForm({ onEntryAdded, editingEntry, onCancelEdit
                 id="odometer"
                 type="number"
                 step="0.1"
-                placeholder="123456.7"
+                placeholder="1850.00"
                 value={formData.odometer}
                 onChange={(e) => handleInputChange('odometer', e.target.value)}
                 required
@@ -183,12 +183,12 @@ export default function FuelEntryForm({ onEntryAdded, editingEntry, onCancelEdit
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="totalCost">Total Cost ($) *</Label>
+              <Label htmlFor="totalCost">Total Fuel Cost ($) *</Label>
               <Input
                 id="totalCost"
                 type="number"
                 step="0.01"
-                placeholder="65.98"
+                placeholder="500.00"
                 value={formData.totalCost}
                 onChange={(e) => handleInputChange('totalCost', e.target.value)}
                 required
@@ -196,12 +196,12 @@ export default function FuelEntryForm({ onEntryAdded, editingEntry, onCancelEdit
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="costPerLiter">Cost per Liter ($) *</Label>
+              <Label htmlFor="costPerLiter">Price Per Liter ($) *</Label>
               <Input
                 id="costPerLiter"
                 type="number"
                 step="0.01"
-                placeholder="1.45"
+                placeholder="122.85"
                 value={formData.costPerLiter}
                 onChange={(e) => handleInputChange('costPerLiter', e.target.value)}
                 required
@@ -219,7 +219,7 @@ export default function FuelEntryForm({ onEntryAdded, editingEntry, onCancelEdit
                 id="liters"
                 type="number"
                 step="0.01"
-                placeholder="45.50"
+                placeholder="15.50"
                 value={formData.liters}
                 onChange={(e) => handleInputChange('liters', e.target.value)}
                 required
@@ -247,7 +247,7 @@ export default function FuelEntryForm({ onEntryAdded, editingEntry, onCancelEdit
                 }}
               />
               <Label htmlFor="fuelType" className="flex items-center gap-2">
-                Partial Fuel Entry
+                Partial Entry
                 {formData.fuelType === 'PARTIAL' && (
                   <Badge variant="secondary" className="text-xs">
                     <AlertTriangle className="h-3 w-3 mr-1" />
