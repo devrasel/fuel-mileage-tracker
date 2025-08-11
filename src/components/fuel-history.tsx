@@ -472,12 +472,8 @@ export default function FuelHistory({ entries, onEntryDeleted, onEntryEdited, se
                               <div className="text-xs text-muted-foreground">
                                 Odometer: {formatNumber(partial.odometer, 1)} {settings?.distanceUnit || 'km'}
                               </div>
-                              {partial.odometerExtraKm && partial.odometerExtraKm > 0 && (
-                                <div className="text-xs text-purple-600 font-medium">
-                                  📏 Extra km Added: {formatNumber(partial.odometerExtraKm, 1)} {settings?.distanceUnit || 'km'}
-                                </div>
-                              )}
-                              <div className="text-xs text-green-600 font-medium">
+                        
+                              <div className="text-xs text-green-600 font-medium pt-2 pb-2">
                                 <Route className="h-3 w-3 inline mr-1" />
                                 Distance Contributed: {
                                   getDistanceContributedByPartial(partial, entry) > 0 ? 
